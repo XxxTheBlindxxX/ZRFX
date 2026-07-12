@@ -36,17 +36,17 @@ const DEFAULT_CONTENT = {
       { title: "[ Project Eight ]", category: "[ VFX Breakdown / Year ]", video: "assets/videos/project-8.mp4" }
     ]
   },
-  featured: {
-    kicker: "Selected Work",
-    titleSerif: "Featured",
-    titleAccent: "PROJECTS",
+  services: {
+    kicker: "Services",
+    titleSerif: "What I",
+    titleAccent: "OFFER",
     items: [
-      { category: "[ Commercial · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-1.mp4" },
-      { category: "[ Music Video · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-2.mp4" },
-      { category: "[ Short Film · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-3.mp4" },
-      { category: "[ Social Spot · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-4.mp4" },
-      { category: "[ Commercial · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-5.mp4" },
-      { category: "[ VFX Breakdown · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-6.mp4" }
+      { title: "AI Video Generation", description: "Full AI-generated shots and scenes built from prompts, references, and storyboards.", slug: "ai-video-generation" },
+      { title: "AI Video Fixes", description: "Cleaning up warping, flicker, and artifacts from AI-generated footage so it holds up.", slug: "ai-video-fixes" },
+      { title: "Video Editing", description: "Cutting raw footage into a paced, structured story — from rough cut to final grade.", slug: "video-editing" },
+      { title: "Screen Comp", description: "Compositing screen inserts and replacements into live-action footage.", slug: "screen-comp" },
+      { title: "Keying", description: "Clean green/blue-screen keying for compositing talent into any background.", slug: "keying" },
+      { title: "Cleanups", description: "Removing rigs, wires, blemishes, and unwanted objects from a shot.", slug: "cleanups" }
     ]
   },
   faq: {
@@ -234,45 +234,44 @@ function buildWorkSection() {
   return sec;
 }
 
-function buildFeaturedSection() {
+function buildServicesSection() {
   const sec = document.createElement('section');
   sec.className = 'admin-section';
   const h2 = document.createElement('h2');
-  h2.textContent = 'Featured Projects Section';
+  h2.textContent = 'Services Section';
   sec.appendChild(h2);
-  sec.appendChild(field('Kicker', 'featured.kicker'));
-  sec.appendChild(field('Title — serif line', 'featured.titleSerif'));
-  sec.appendChild(field('Title — accent word', 'featured.titleAccent'));
+  sec.appendChild(field('Kicker', 'services.kicker'));
+  sec.appendChild(field('Title — serif line', 'services.titleSerif'));
+  sec.appendChild(field('Title — accent word', 'services.titleAccent'));
 
-  state.featured.items.forEach((item, i) => {
+  const note = document.createElement('p');
+  note.className = 'admin-note';
+  note.textContent = 'Each service links to services/<slug>.html — those pages are static HTML, edit them directly in the services/ folder.';
+  sec.appendChild(note);
+
+  state.services.items.forEach((item, i) => {
     const row = document.createElement('div');
     row.className = 'repeat-item';
     const idx = document.createElement('span');
     idx.className = 'repeat-index';
-    idx.textContent = `Featured ${i + 1}`;
+    idx.textContent = `Service ${i + 1}`;
     row.appendChild(idx);
     row.appendChild(removeButton(() => {
-      state.featured.items.splice(i, 1);
+      state.services.items.splice(i, 1);
       btnSave.disabled = false;
       renderForm();
     }));
-    row.appendChild(field('Category', `featured.items.${i}.category`));
-    row.appendChild(field('Title', `featured.items.${i}.title`));
-    row.appendChild(field('Description', `featured.items.${i}.description`, true));
-    row.appendChild(field('Client', `featured.items.${i}.client`));
-    row.appendChild(field('Year', `featured.items.${i}.year`));
-    row.appendChild(field('Video path (place the file in assets/videos/)', `featured.items.${i}.video`));
+    row.appendChild(field('Title', `services.items.${i}.title`));
+    row.appendChild(field('Description', `services.items.${i}.description`, true));
+    row.appendChild(field('Slug (page filename, no .html)', `services.items.${i}.slug`));
     sec.appendChild(row);
   });
 
-  sec.appendChild(addButton('+ Add featured project', () => {
-    state.featured.items.push({
-      category: '[ Category · Client ]',
-      title: '[ Project Title ]',
-      description: '[ One-line description of the project. ]',
-      client: '[ Brand ]',
-      year: '2026',
-      video: 'assets/videos/project-1.mp4'
+  sec.appendChild(addButton('+ Add service', () => {
+    state.services.items.push({
+      title: '[ Service Name ]',
+      description: '[ One-line description of the service. ]',
+      slug: 'new-service'
     });
     btnSave.disabled = false;
     renderForm();
@@ -337,7 +336,7 @@ function renderForm() {
 
   root.appendChild(buildStatsSection());
   root.appendChild(buildWorkSection());
-  root.appendChild(buildFeaturedSection());
+  root.appendChild(buildServicesSection());
   root.appendChild(buildFaqSection());
 
   root.appendChild(section('Contact', [

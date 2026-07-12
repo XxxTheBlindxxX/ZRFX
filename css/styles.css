@@ -12,7 +12,7 @@
   --accent-blue: #4f8cff;
   --accent-blue-light: #7dabff;
   --border: rgba(244, 247, 251, 0.1);
-  --nav-width: 90px;
+  --nav-width: 110px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -119,29 +119,29 @@ button { font-family: inherit; cursor: pointer; }
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 110px 26px 34px;
+  padding: 110px 30px 40px;
 }
 .nav-links {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 38px;
+  gap: 50px;
 }
 .nav-links a {
   writing-mode: vertical-rl;
-  font-size: 0.8rem;
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.16em;
   color: #fff;
   opacity: 0.75;
   mix-blend-mode: difference;
   transition: opacity 0.3s;
 }
 .nav-links a:hover { opacity: 1; }
-.nav-social { display: flex; flex-direction: column; gap: 14px; }
+.nav-social { display: flex; flex-direction: column; gap: 16px; }
 .nav-social a {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: 1px solid var(--border);
   display: flex;
@@ -150,7 +150,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text-dim);
   transition: color 0.3s, border-color 0.3s;
 }
-.nav-social a svg { width: 15px; height: 15px; }
+.nav-social a svg { width: 18px; height: 18px; }
 .nav-social a:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
 
 @media (max-width: 860px) {
@@ -259,10 +259,13 @@ section:not(.hero) { padding-right: calc(8vw + var(--nav-width)); }
   transition: opacity 1.2s linear;
 }
 .hero-bg-video.is-ready { opacity: 0.85; }
+/* Feathers all the way to a fully-opaque match of the page background at the
+   very bottom, so the video dissolves into the next section instead of
+   cutting off hard at the section boundary. */
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 18, 32, 0.25) 0%, rgba(10, 18, 32, 0.4) 55%, rgba(10, 18, 32, 0.65) 100%);
+  background: linear-gradient(180deg, rgba(10, 18, 32, 0.25) 0%, rgba(10, 18, 32, 0.4) 45%, rgba(10, 18, 32, 0.75) 82%, var(--bg) 100%);
 }
 .hero-inner { position: relative; z-index: 1; max-width: 900px; }
 .hero-kicker {
@@ -536,25 +539,23 @@ section.work {
   .work-play-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* Featured Projects — traditional bordered cards, 3 columns x 2 rows.
-   Reuses .work-thumb/.work-video/.work-play-btn inside each card, so the
-   existing lazy-load, concurrency cap, and fullscreen-modal click all
-   apply automatically — no extra JS needed for this section.
-   section.featured (not just .featured) to out-specificity the shared
-   nav-gutter padding-right — same centering-must-be-symmetric fix as About. */
-section.featured { padding-right: 8vw; }
-.featured-head {
+/* Services — 3x2 grid of cards, each linking to its own static page in
+   services/. section.services (not just .services) to out-specificity the
+   shared nav-gutter padding-right — same centering-must-be-symmetric fix
+   used for About. */
+section.services { padding-right: 8vw; }
+.services-head {
   text-align: center;
   max-width: none;
   margin: 0 auto 64px;
 }
-.featured-title-block .line1 {
+.services-title-block .line1 {
   display: block;
   font-family: 'Playfair Display', serif;
   font-size: clamp(2.2rem, 5.5vw, 3.6rem);
   color: var(--text);
 }
-.featured-title-block .line2.accent {
+.services-title-block .line2.accent {
   display: block;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -565,69 +566,55 @@ section.featured { padding-right: 8vw; }
   margin-top: 6px;
 }
 
-.featured-grid {
+.services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
 }
 @media (max-width: 1100px) {
-  .featured-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 700px) {
-  .featured-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
 }
 
-.featured-card {
+.service-card {
+  display: flex;
+  flex-direction: column;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 16px 16px 22px;
+  padding: 36px 32px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 25px 60px -35px rgba(79, 140, 255, 0.3);
   transition: transform 0.4s var(--ease), border-color 0.4s;
 }
-.featured-card:hover { transform: translateY(-6px); border-color: var(--accent-blue); }
-.featured-card .work-thumb {
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-.featured-category {
+.service-card:hover { transform: translateY(-6px); border-color: var(--accent-blue); }
+.service-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
   color: var(--accent-blue-light);
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
+  opacity: 0.6;
+  margin-bottom: 18px;
 }
-.featured-title {
+.service-title {
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 1.4rem;
-  margin-bottom: 10px;
+  font-size: 1.35rem;
+  margin-bottom: 12px;
 }
-.featured-desc {
+.service-desc {
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
-.featured-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
+.service-arrow {
+  margin-top: auto;
+  color: var(--accent-blue);
+  font-size: 1.3rem;
+  transition: transform 0.3s var(--ease);
 }
-.featured-client {
-  font-size: 0.85rem;
-  color: var(--text-faint);
-  font-weight: 500;
-}
-.featured-year {
-  font-size: 0.75rem;
-  color: var(--text-faint);
-  background: var(--bg-alt);
-  border-radius: 999px;
-  padding: 4px 12px;
-}
+.service-card:hover .service-arrow { transform: translateX(8px); }
 
 /* Fullscreen video modal — opened by clicking a Work thumbnail */
 .video-modal {
@@ -755,6 +742,77 @@ section.featured { padding-right: 8vw; }
 @media (max-width: 760px) {
   .contact-grid { grid-template-columns: 1fr; }
 }
+
+/* Individual service pages (services/*.html) */
+.service-hero {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 160px 6vw 80px;
+}
+.service-hero .section-kicker { margin-bottom: 20px; }
+.service-hero-title {
+  font-size: clamp(2.6rem, 7vw, 4.5rem);
+  line-height: 1.05;
+}
+.service-hero-title .line1 {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--text);
+}
+.service-hero-title .line2 {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-blue);
+  margin-top: 6px;
+}
+.service-hero-sub {
+  margin-top: 28px;
+  max-width: 560px;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+.service-body { padding-top: 40px; padding-bottom: 120px; }
+.service-body-inner { max-width: 700px; margin: 0 auto; }
+.service-body-inner > p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+}
+.service-body-inner h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+.service-list {
+  list-style: none;
+  margin-bottom: 44px;
+}
+.service-list li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+.service-back {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 0.3s;
+}
+.service-back:hover { color: var(--accent-blue); }
 
 /* Footer */
 .footer {

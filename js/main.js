@@ -44,12 +44,15 @@ if (gsapReady) {
     gsap.ticker.lagSmoothing(0);
   }
 
-  // Hero entrance (hero markup is static, so this can run immediately)
-  gsap.timeline({ delay: 0.6 })
-    .to('.hero-kicker', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
-    .to('.reveal-word', { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power3.out' }, '-=0.4')
-    .to('.hero-sub', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
-    .to('.hero .btn-primary', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+  // Hero entrance (hero markup is static, so this can run immediately) —
+  // only on pages that actually have a hero (not the service subpages).
+  if (document.querySelector('.hero')) {
+    gsap.timeline({ delay: 0.6 })
+      .to('.hero-kicker', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+      .to('.reveal-word', { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power3.out' }, '-=0.4')
+      .to('.hero-sub', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+      .to('.hero .btn-primary', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+  }
 }
 
 // ---- Custom cursor (event delegation so it also covers dynamically rendered content) ----

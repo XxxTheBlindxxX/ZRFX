@@ -39,17 +39,17 @@ const DEFAULT_CONTENT = {
       { title: "[ Project Eight ]", category: "[ VFX Breakdown / Year ]", video: "assets/videos/project-8.mp4" }
     ]
   },
-  featured: {
-    kicker: "Selected Work",
-    titleSerif: "Featured",
-    titleAccent: "PROJECTS",
+  services: {
+    kicker: "Services",
+    titleSerif: "What I",
+    titleAccent: "OFFER",
     items: [
-      { category: "[ Commercial · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-1.mp4" },
-      { category: "[ Music Video · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-2.mp4" },
-      { category: "[ Short Film · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-3.mp4" },
-      { category: "[ Social Spot · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-4.mp4" },
-      { category: "[ Commercial · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-5.mp4" },
-      { category: "[ VFX Breakdown · Client ]", title: "[ Project Title ]", description: "[ One-line description of the project. ]", client: "[ Brand ]", year: "2026", video: "assets/videos/project-6.mp4" }
+      { title: "AI Video Generation", description: "Full AI-generated shots and scenes built from prompts, references, and storyboards.", slug: "ai-video-generation" },
+      { title: "AI Video Fixes", description: "Cleaning up warping, flicker, and artifacts from AI-generated footage so it holds up.", slug: "ai-video-fixes" },
+      { title: "Video Editing", description: "Cutting raw footage into a paced, structured story — from rough cut to final grade.", slug: "video-editing" },
+      { title: "Screen Comp", description: "Compositing screen inserts and replacements into live-action footage.", slug: "screen-comp" },
+      { title: "Keying", description: "Clean green/blue-screen keying for compositing talent into any background.", slug: "keying" },
+      { title: "Cleanups", description: "Removing rigs, wires, blemishes, and unwanted objects from a shot.", slug: "cleanups" }
     ]
   },
   faq: {
@@ -135,34 +135,19 @@ function renderContent(content) {
     `).join('');
   }
 
-  // Featured Projects — reuses .work-thumb/.work-video/.work-play-btn classes
-  // so the existing lazy-load/concurrency-cap/fullscreen-modal logic in
-  // main.js applies to these cards automatically, no extra JS needed.
-  setText('featured-kicker', c.featured.kicker);
-  setText('featured-title-serif', c.featured.titleSerif);
-  setText('featured-title-accent', c.featured.titleAccent);
-  const featuredEl = document.getElementById('featuredGrid');
-  if (featuredEl) {
-    featuredEl.innerHTML = c.featured.items.map((item, i) => `
-      <div class="featured-card reveal">
-        <div class="work-thumb thumb-${(i % 4) + 1}">
-          <video class="work-video" muted loop playsinline preload="none">
-            <source src="${escapeHtml(item.video)}" type="video/mp4">
-          </video>
-          <button class="work-play-btn" aria-label="Play ${escapeHtml(item.title)} fullscreen">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-        <div class="featured-body">
-          <p class="featured-category">${escapeHtml(item.category)}</p>
-          <h3 class="featured-title">${escapeHtml(item.title)}</h3>
-          <p class="featured-desc">${escapeHtml(item.description)}</p>
-          <div class="featured-footer">
-            <span class="featured-client">${escapeHtml(item.client)}</span>
-            <span class="featured-year">${escapeHtml(item.year)}</span>
-          </div>
-        </div>
-      </div>
+  // Services — each card links to its own static page in services/
+  setText('services-kicker', c.services.kicker);
+  setText('services-title-serif', c.services.titleSerif);
+  setText('services-title-accent', c.services.titleAccent);
+  const servicesEl = document.getElementById('servicesGrid');
+  if (servicesEl) {
+    servicesEl.innerHTML = c.services.items.map((item, i) => `
+      <a href="services/${escapeHtml(item.slug)}.html" class="service-card reveal">
+        <span class="service-num">${String(i + 1).padStart(2, '0')}</span>
+        <h3 class="service-title">${escapeHtml(item.title)}</h3>
+        <p class="service-desc">${escapeHtml(item.description)}</p>
+        <span class="service-arrow" aria-hidden="true">&#8594;</span>
+      </a>
     `).join('');
   }
 
