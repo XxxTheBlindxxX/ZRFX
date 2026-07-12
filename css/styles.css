@@ -221,8 +221,15 @@ section:not(.hero) { padding-right: calc(8vw + var(--nav-width)); }
   color: var(--text);
 }
 
-/* Hero */
+/* Hero
+   isolation:isolate makes .hero its own stacking context, so z-index values
+   inside it (.hero-bg, .hero-inner) are scoped locally. Without this, a
+   negative z-index on .hero-bg bubbles all the way up to the document root
+   instead of just sitting behind the hero text — fragile, and the likely
+   reason the background video wasn't rendering reliably. */
 .hero {
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -234,7 +241,7 @@ section:not(.hero) { padding-right: calc(8vw + var(--nav-width)); }
 .hero-bg {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 50% 20%, rgba(79, 140, 255, 0.14), transparent 60%),
@@ -257,7 +264,7 @@ section:not(.hero) { padding-right: calc(8vw + var(--nav-width)); }
   inset: 0;
   background: linear-gradient(180deg, rgba(10, 18, 32, 0.25) 0%, rgba(10, 18, 32, 0.4) 55%, rgba(10, 18, 32, 0.65) 100%);
 }
-.hero-inner { max-width: 900px; }
+.hero-inner { position: relative; z-index: 1; max-width: 900px; }
 .hero-kicker {
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -306,6 +313,7 @@ section:not(.hero) { padding-right: calc(8vw + var(--nav-width)); }
 
 .scroll-cue {
   position: absolute;
+  z-index: 1;
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
