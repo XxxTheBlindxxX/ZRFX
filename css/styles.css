@@ -1,0 +1,772 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #0a1220;
+  --bg-alt: #0e1a2c;
+  --bg-card: #11213a;
+  --text: #f4f7fb;
+  --text-dim: rgba(244, 247, 251, 0.65);
+  --text-faint: rgba(244, 247, 251, 0.35);
+  --accent: #ff7a3d;
+  --accent-light: #ffa06b;
+  --accent-blue: #4f8cff;
+  --accent-blue-light: #7dabff;
+  --border: rgba(244, 247, 251, 0.1);
+  --nav-width: 90px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { background: var(--bg); scroll-behavior: auto; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+::selection { background: var(--accent-blue); color: #0a1220; }
+
+/* Film grain overlay */
+.grain {
+  position: fixed;
+  inset: -100px;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.5s steps(2) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-2%, 2%); }
+  100% { transform: translate(2%, -2%); }
+}
+
+/* Loader */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+.loader-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 6vw, 4rem);
+  letter-spacing: 0.05em;
+  color: var(--text);
+  opacity: 0.4;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: 1; } }
+.loader.hidden { opacity: 0; visibility: hidden; }
+
+/* Custom cursor (desktop only) */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s var(--ease), height 0.2s var(--ease), background 0.2s;
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cursor-dot { display: block; }
+}
+.cursor-dot.grow { width: 36px; height: 36px; background: rgba(79, 140, 255, 0.2); border: 1px solid var(--accent-blue); }
+
+/* Logo — mix-blend-mode auto-inverts against whatever's behind it, so it
+   stays legible whether it's over the dark page, a video, or the light
+   Work-intro panel, without needing scroll-linked theme-switching JS. */
+.nav-logo {
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  z-index: 500;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.03em;
+  color: #fff;
+  mix-blend-mode: difference;
+}
+.nav-logo .dot { color: var(--accent); }
+
+/* Nav — vertical rail on the right edge. Floats above the full-bleed Work
+   video wall and the light Work-intro panel; mix-blend-mode keeps text
+   legible against either. */
+.nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 110px 26px 34px;
+}
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 38px;
+}
+.nav-links a {
+  writing-mode: vertical-rl;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #fff;
+  opacity: 0.75;
+  mix-blend-mode: difference;
+  transition: opacity 0.3s;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-social { display: flex; flex-direction: column; gap: 14px; }
+.nav-social a {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  transition: color 0.3s, border-color 0.3s;
+}
+.nav-social a svg { width: 15px; height: 15px; }
+.nav-social a:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
+
+@media (max-width: 860px) {
+  .nav { display: none; }
+}
+
+/* Mobile burger */
+.nav-burger {
+  display: none;
+  position: fixed;
+  top: 26px;
+  right: 28px;
+  z-index: 600;
+  width: 32px;
+  height: 22px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.nav-burger span {
+  display: block;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease), opacity 0.3s;
+}
+@media (max-width: 860px) { .nav-burger { display: flex; } }
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 550;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s var(--ease), visibility 0.4s;
+}
+.mobile-menu.open { opacity: 1; visibility: visible; }
+.mobile-links { display: flex; flex-direction: column; gap: 28px; text-align: center; }
+.mobile-links a {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Section shell */
+section { position: relative; padding: 140px 8vw; }
+section:not(.hero) { padding-right: calc(8vw + var(--nav-width)); }
+@media (max-width: 860px) {
+  section:not(.hero) { padding-right: 8vw; }
+}
+.section-head { max-width: 640px; margin-bottom: 64px; }
+.section-kicker {
+  color: var(--accent-blue-light);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.8rem;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.85rem);
+  line-height: 1.25;
+  color: var(--text);
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 6vw;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(79, 140, 255, 0.14), transparent 60%),
+    var(--bg);
+}
+/* Background video behind the hero text — dimmed and fades in once playable,
+   falls back to the gradient above if no file has been added yet. */
+.hero-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s linear;
+}
+.hero-bg-video.is-ready { opacity: 0.85; }
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 18, 32, 0.25) 0%, rgba(10, 18, 32, 0.4) 55%, rgba(10, 18, 32, 0.65) 100%);
+}
+.hero-inner { max-width: 900px; }
+.hero-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+}
+.hero-title {
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  line-height: 1.05;
+}
+.hero-title .serif {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text);
+}
+.hero-title .accent {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent-blue);
+}
+.reveal-line { display: block; overflow: hidden; }
+.reveal-word { display: inline-block; }
+.hero-sub {
+  margin: 32px auto 40px;
+  max-width: 540px;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+.btn-primary {
+  display: inline-block;
+  padding: 16px 40px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  border-radius: 999px;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease);
+  background: transparent;
+}
+.btn-primary:hover { background: var(--accent); color: #0a1220; }
+
+.scroll-cue {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.scroll-cue span {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--accent-blue), transparent);
+  animation: scrollcue 1.8s ease-in-out infinite;
+}
+.scroll-cue p {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+@keyframes scrollcue {
+  0%, 100% { transform: scaleY(1); opacity: 0.4; }
+  50% { transform: scaleY(1.3); opacity: 1; }
+}
+
+/* About — centered single-column layout: kicker, two-tone title, bio, stats, CTA.
+   section.about (not just .about) to out-specificity the shared nav-gutter
+   padding-right below — a truly centered block needs symmetric padding,
+   otherwise it visually sits left of true center (content is narrow enough
+   it was never going to collide with the thin nav rail anyway). */
+section.about { padding-right: 8vw; }
+@media (max-width: 860px) {
+  section.about { padding-right: 8vw; }
+}
+.about { text-align: center; }
+.about-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.about-title { margin-bottom: 8px; }
+.about-title .line1 {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  color: var(--text);
+  line-height: 1.2;
+}
+.about-title .line2.accent {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.5rem, 3.6vw, 2.4rem);
+  color: var(--accent-blue);
+  margin-top: 6px;
+}
+.about-bio {
+  margin: 32px auto 44px;
+  max-width: 640px;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+}
+.about-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 44px;
+}
+.stat { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: var(--accent-blue-light);
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 760px) {
+  .about-stats { flex-wrap: wrap; gap: 32px; }
+}
+
+/* Work — full-bleed video wall: no side margins, no gaps, no card borders.
+   The section overrides the shared padding so tiles run edge to edge and the
+   fixed nav rail simply floats on top (matching the reference layout). */
+/* section.work (not just .work) to out-specificity the shared
+   `section:not(.hero) { padding-right: ... }` nav-gutter rule below */
+section.work {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* Work intro — light-themed header panel, deliberately breaking from the
+   dark palette (matching the reference), sitting above the dark video wall.
+   Own horizontal padding since section.work itself has none. */
+.work-intro {
+  background: #f2ede4;
+  color: #16223a;
+  text-align: center;
+  padding: 150px 8vw 100px;
+}
+@media (max-width: 860px) {
+  .work-intro { padding-right: 8vw; }
+}
+.work-intro .section-kicker { color: rgba(22, 34, 58, 0.5); }
+.work-intro-title { margin-bottom: 8px; }
+.work-intro-title .line1 {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  color: #16223a;
+}
+.work-intro-title .line2.accent {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--accent-blue);
+  margin-top: 6px;
+}
+.work-intro-sub {
+  margin: 28px auto 20px;
+  max-width: 680px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(22, 34, 58, 0.65);
+}
+.work-intro-tags {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(22, 34, 58, 0.4);
+}
+.work-intro-tags .tag-divider { margin: 0 10px; }
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  background: var(--bg-alt);
+}
+.work-card {
+  display: block;
+  position: relative;
+}
+.work-thumb {
+  position: relative;
+  aspect-ratio: 16/10;
+  background: var(--bg-alt);
+  overflow: hidden;
+  cursor: pointer;
+}
+.thumb-1 { background: linear-gradient(135deg, #1c2c4a, #0a1220); }
+.thumb-2 { background: linear-gradient(135deg, #202020, #0a1220); }
+.thumb-3 { background: linear-gradient(135deg, #2a2216, #11213a); }
+.thumb-4 { background: linear-gradient(135deg, #16233d, #0a1220); }
+.work-thumb.video-missing .work-video { display: none; }
+
+/* Looping showreel video — sits over the gradient fallback, fades in once it can actually play */
+.work-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s linear, transform 0.5s var(--ease);
+}
+.work-video.is-ready { opacity: 1; }
+.work-card:hover .work-video { transform: scale(1.04); }
+
+/* Play button — click opens the clip in the fullscreen modal */
+.work-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 247, 251, 0.5);
+  background: rgba(10, 18, 32, 0.45);
+  backdrop-filter: blur(4px);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), background 0.3s;
+}
+.work-play-btn svg { width: 22px; height: 22px; margin-left: 3px; }
+.work-card:hover .work-play-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.work-play-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); }
+
+/* Caption overlays the video on hover instead of sitting in its own bordered block */
+.work-meta {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 28px 22px 18px;
+  background: linear-gradient(transparent, rgba(10, 18, 32, 0.85) 70%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.work-card:hover .work-meta { opacity: 1; }
+.work-meta h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; margin-bottom: 6px; }
+.work-meta p { font-size: 0.85rem; color: var(--text-faint); }
+
+@media (max-width: 760px) {
+  .work-grid { grid-template-columns: 1fr; }
+  .work-meta { opacity: 1; }
+  .work-play-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Featured Projects — traditional bordered cards, 3 columns x 2 rows.
+   Reuses .work-thumb/.work-video/.work-play-btn inside each card, so the
+   existing lazy-load, concurrency cap, and fullscreen-modal click all
+   apply automatically — no extra JS needed for this section.
+   section.featured (not just .featured) to out-specificity the shared
+   nav-gutter padding-right — same centering-must-be-symmetric fix as About. */
+section.featured { padding-right: 8vw; }
+.featured-head {
+  text-align: center;
+  max-width: none;
+  margin: 0 auto 64px;
+}
+.featured-title-block .line1 {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+  color: var(--text);
+}
+.featured-title-block .line2.accent {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: clamp(1.7rem, 4.2vw, 2.8rem);
+  color: var(--accent-blue);
+  margin-top: 6px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+@media (max-width: 1100px) {
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .featured-grid { grid-template-columns: 1fr; }
+}
+
+.featured-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 16px 22px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 25px 60px -35px rgba(79, 140, 255, 0.3);
+  transition: transform 0.4s var(--ease), border-color 0.4s;
+}
+.featured-card:hover { transform: translateY(-6px); border-color: var(--accent-blue); }
+.featured-card .work-thumb {
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.featured-category {
+  color: var(--accent-blue-light);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.featured-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+.featured-desc {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.featured-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.featured-client {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+.featured-year {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  background: var(--bg-alt);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+/* Fullscreen video modal — opened by clicking a Work thumbnail */
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--ease), visibility 0.3s;
+}
+.video-modal.open { opacity: 1; visibility: visible; }
+.video-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 8, 14, 0.94);
+}
+.video-modal-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#modalVideo {
+  max-width: 96vw;
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  background: #000;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+}
+.video-modal-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(10, 18, 32, 0.7);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+.video-modal-close svg { width: 20px; height: 20px; }
+.video-modal-close:hover {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  transform: rotate(90deg);
+}
+
+/* FAQ */
+.faq-list { max-width: 760px; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text);
+  padding: 26px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.05rem;
+  text-align: left;
+}
+.faq-icon { color: var(--accent); font-size: 1.4rem; transition: transform 0.3s var(--ease); }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease);
+}
+.faq-a p { color: var(--text-dim); padding-bottom: 24px; line-height: 1.7; max-width: 620px; }
+.faq-item.open .faq-a { max-height: 200px; }
+
+/* Contact */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 64px;
+}
+.form-row { margin-bottom: 22px; }
+.form-row label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+.form-row input, .form-row textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 10px 0;
+  transition: border-color 0.3s;
+  resize: vertical;
+}
+.form-row input:focus, .form-row textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+.contact-email {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--accent-blue-light);
+  margin-bottom: 24px;
+}
+.contact-socials { display: flex; flex-direction: column; gap: 12px; }
+.contact-socials a { color: var(--text-dim); font-size: 0.95rem; width: fit-content; }
+.contact-socials a:hover { color: var(--accent); }
+
+@media (max-width: 760px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* Footer */
+.footer {
+  padding: 40px 8vw;
+  padding-right: calc(8vw + var(--nav-width));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+@media (max-width: 860px) {
+  .footer { padding-right: 8vw; }
+}
+.back-top { color: var(--text-faint); transition: color 0.3s; }
+.back-top:hover { color: var(--accent-blue); }
+
+/* Reveal animation base state (GSAP animates these) */
+.reveal, .reveal-word {
+  opacity: 0;
+  transform: translateY(24px);
+}

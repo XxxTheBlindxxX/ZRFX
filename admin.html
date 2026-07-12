@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZILLUR — Content Dashboard</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <h1>ZILLUR<span class="dot">.</span> <span class="admin-label">Content Dashboard</span></h1>
+  <div class="admin-actions">
+    <button id="btnOpen" class="btn">Open content.json</button>
+    <button id="btnReset" class="btn btn-ghost">Load Defaults</button>
+    <button id="btnSave" class="btn btn-primary" disabled>Save</button>
+  </div>
+</header>
+
+<p class="admin-status" id="status">No file loaded yet. Click "Open content.json" and pick the file from your <code>zillur-site</code> folder.</p>
+
+<input type="file" id="fileInput" accept="application/json" hidden>
+
+<main id="formRoot" class="admin-form"></main>
+
+<footer class="admin-footer">
+  <p>Edits apply to the JSON in memory only until you click <strong>Save</strong>. In Chrome/Edge, Save writes directly back to the file you opened. In other browsers, Save downloads an updated <code>content.json</code> — replace the old one in your project folder with it.</p>
+</footer>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
