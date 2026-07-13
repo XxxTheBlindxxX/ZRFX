@@ -139,6 +139,15 @@ button { font-family: inherit; cursor: pointer; }
   transition: opacity 0.3s;
 }
 .nav-links a:hover { opacity: 1; }
+/* Active section indicator — solid accent orange (same as the logo's dot),
+   no mix-blend-mode here since blending would distort the orange depending
+   on what's behind it; a solid accent reads fine over both dark and light
+   sections since it's already a fully-saturated color. */
+.nav-links a.active {
+  color: var(--accent);
+  opacity: 1;
+  mix-blend-mode: normal;
+}
 .nav-social { display: flex; flex-direction: column; gap: 16px; }
 .nav-social a {
   width: 42px;
@@ -199,7 +208,9 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: color 0.3s;
 }
+.mobile-links a.active { color: var(--accent); }
 
 /* Section shell */
 section { position: relative; padding: 140px 8vw; }

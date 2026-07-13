@@ -237,6 +237,38 @@ function initScrollReveals() {
   });
 }
 
+// ---- Scroll-spy: highlight the nav link for whichever section is in view ----
+// Matches each nav link's #fragment against a section id on this page, so it
+// no-ops harmlessly on the service subpages (whose nav links point back to
+// index.html#section rather than a local anchor).
+function initScrollSpy() {
+  const links = document.querySelectorAll('.nav-links a, .mobile-links a');
+  const sections = [];
+  links.forEach((a) => {
+    const id = (a.getAttribute('href') || '').split('#')[1];
+    const section = id && document.getElementById(id);
+    if (section) sections.push(section);
+  });
+  if (!sections.length) return;
+
+  function setActive(id) {
+    links.forEach((a) => {
+      const linkId = (a.getAttribute('href') || '').split('#')[1];
+      a.classList.toggle('active', linkId === id);
+    });
+  }
+
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
+  );
+  sections.forEach((section) => spy.observe(section));
+}
+
 // Work/FAQ markup is rendered by content.js — everything that targets it
 // waits for that to finish instead of running at parse time.
 document.addEventListener('content:ready', () => {
@@ -245,4 +277,5 @@ document.addEventListener('content:ready', () => {
   initVideoModal();
   initFaqAccordion();
   initScrollReveals();
+  initScrollSpy();
 });
