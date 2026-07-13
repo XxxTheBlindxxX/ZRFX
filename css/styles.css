@@ -130,6 +130,7 @@ button { font-family: inherit; cursor: pointer; }
 .nav-links a {
   writing-mode: vertical-rl;
   font-size: 1rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: #fff;
