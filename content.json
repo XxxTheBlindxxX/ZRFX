@@ -31,9 +31,7 @@
       { "title": "[ Project Three ]", "category": "[ Short Film / Year ]", "video": "assets/videos/project-3.mp4" },
       { "title": "[ Project Four ]", "category": "[ VFX Breakdown / Year ]", "video": "assets/videos/project-4.mp4" },
       { "title": "[ Project Five ]", "category": "[ Commercial / Year ]", "video": "assets/videos/project-5.mp4" },
-      { "title": "[ Project Six ]", "category": "[ Music Video / Year ]", "video": "assets/videos/project-6.mp4" },
-      { "title": "[ Project Seven ]", "category": "[ Short Film / Year ]", "video": "assets/videos/project-7.mp4" },
-      { "title": "[ Project Eight ]", "category": "[ VFX Breakdown / Year ]", "video": "assets/videos/project-8.mp4" }
+      { "title": "[ Project Six ]", "category": "[ Music Video / Year ]", "video": "assets/videos/project-6.mp4" }
     ]
   },
   "services": {
