@@ -3,155 +3,1142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Video editing by Zillur — story-first cuts, seamless pacing, and delivery-ready masters. Every cut, considered.">
 <title>Video Edit — ZILLUR</title>
-<meta name="description" content="Cutting raw footage into a paced, structured story — from assembly cut to final export.">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="../css/styles.css?v=13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --near-white: #f5f5f7;
+    --ink: #1d1d1f;
+    --ink-2: #6e6e73;
+    --blue: #0071e3;
+    --blue-dark: #0060c2;
+    --hairline: rgba(0, 0, 0, 0.1);
+    --radius-video: 22px;
+    --shadow-soft:
+      0 2px 6px rgba(0, 0, 0, 0.04),
+      0 12px 28px rgba(0, 0, 0, 0.08),
+      0 32px 64px rgba(0, 0, 0, 0.06);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--white);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(0, 113, 227, 0.18); }
+
+  a { color: inherit; text-decoration: none; }
+
+  .container {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Fixed Back to Home ---------- */
+  .back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 900;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    min-height: 44px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-radius: 980px;
+    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.35);
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .back-home svg { transition: transform 0.25s ease; }
+  .back-home:hover {
+    background: var(--blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 113, 227, 0.45);
+  }
+  .back-home:hover svg { transform: translateX(-3px); }
+  .back-home:active { transform: translateY(0) scale(0.98); }
+
+  /* ---------- Top nav ---------- */
+  .site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 800;
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .site-nav .nav-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .site-nav a.brand {
+    margin-right: auto;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+    padding: 10px 0;
+    white-space: nowrap;
+  }
+  .site-nav a.nav-link {
+    font-size: 0.8rem;
+    color: var(--ink-2);
+    padding: 10px 12px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 980px;
+    white-space: nowrap;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .site-nav a.nav-link:hover { color: var(--ink); background: rgba(0, 0, 0, 0.05); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 140px 24px 120px;
+    background: var(--white);
+    position: relative;
+  }
+  .hero-inner {
+    max-width: 980px;
+    will-change: transform, opacity;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: riseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+  }
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero h1 {
+    font-size: clamp(2.9rem, 9vw, 7rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    margin-bottom: 30px;
+  }
+  .hero h1 .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.55em);
+    animation: wordRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes wordRise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero p.sub {
+    font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+    color: var(--ink-2);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    max-width: 640px;
+    margin: 0 auto 44px;
+    opacity: 0;
+    animation: riseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: riseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 13px 28px;
+    border-radius: 980px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    border: none;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,113,227,0.35); }
+  .btn-ghost { background: transparent; color: var(--blue); border: 1px solid rgba(0,113,227,0.55); }
+  .btn-ghost:hover { background: rgba(0, 113, 227, 0.08); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ink-2);
+    opacity: 0;
+    animation: riseIn 1s ease 1.5s forwards;
+  }
+  .scroll-hint .chev {
+    display: block;
+    width: 22px;
+    height: 22px;
+    margin: 0 auto;
+    animation: bobble 2.2s ease-in-out infinite;
+  }
+  @keyframes bobble {
+    0%, 100% { transform: translateY(0); opacity: 0.55; }
+    50% { transform: translateY(7px); opacity: 1; }
+  }
+
+  /* ---------- Sections ---------- */
+  section.block { padding: 130px 0; }
+  section.alt { background: var(--near-white); }
+
+  .kicker {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+  h2.headline {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 22px;
+  }
+  p.lede {
+    font-size: clamp(1.02rem, 2vw, 1.25rem);
+    color: var(--ink-2);
+    max-width: 640px;
+  }
+  .center { text-align: center; }
+  .center p.lede { margin-left: auto; margin-right: auto; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(34px);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Stats ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 72px;
+  }
+  .stat {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 44px 28px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  }
+  .stat:hover { transform: translateY(-6px); box-shadow: 0 6px 14px rgba(0,0,0,0.05), 0 24px 48px rgba(0,0,0,0.1); }
+  .stat .num {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .num .bracket { color: rgba(29, 29, 31, 0.35); font-weight: 500; }
+  .stat .label {
+    margin-top: 10px;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  /* ---------- Video gallery ---------- */
+  .video-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 34px;
+    margin-top: 72px;
+  }
+  .video-card {
+    position: relative;
+    border-radius: var(--radius-video);
+    overflow: hidden;
+    background: #e9e9ee;
+    aspect-ratio: 16 / 9;
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    transform: scale(0.96);
+    opacity: 0;
+    transition:
+      transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s ease;
+  }
+  .video-card.in { transform: scale(1); opacity: 1; }
+  .video-card:hover { box-shadow: 0 8px 18px rgba(0,0,0,0.07), 0 30px 60px rgba(0,0,0,0.13); }
+  .video-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .video-card .play-badge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.25) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .video-card:hover .play-badge,
+  .video-card:focus-visible .play-badge { opacity: 1; }
+  .play-badge .ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .video-card:hover .ring { transform: scale(1.08); }
+  .play-badge svg { margin-left: 3px; }
+  .video-card .caption {
+    position: absolute;
+    left: 18px;
+    bottom: 14px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .video-card:hover .caption { opacity: 1; transform: translateY(0); }
+
+  .video-card.placeholder {
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    background: radial-gradient(120% 120% at 30% 20%, #f2f2f6 0%, #e6e6ec 100%);
+    color: var(--ink-2);
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+  .video-card.placeholder .film-icon { opacity: 0.45; }
+
+  /* ---------- Modal ---------- */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.86);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5vh 4vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal video {
+    width: 100%;
+    max-width: 1100px;
+    max-height: 85vh;
+    border-radius: 18px;
+    background: #000;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+    transform: scale(0.94);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    outline: none;
+  }
+  .modal.open video { transform: scale(1); }
+  .modal-close {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .modal-close:hover { background: rgba(255, 255, 255, 0.28); transform: rotate(90deg); }
+
+  /* ---------- Before / After ---------- */
+  .compare-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 64px;
+    margin-top: 72px;
+  }
+  .compare {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-video);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    background: #e9e9ee;
+  }
+  .compare .layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  .compare .layer.before { background-color: #dcdce2; }
+  .compare .layer.after {
+    background-color: #cfd6e4;
+    clip-path: inset(0 0 0 50%);
+    will-change: clip-path;
+  }
+  .compare .divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+    transform: translateX(-0.5px);
+    will-change: left;
+    pointer-events: none;
+  }
+  .compare .handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: ew-resize;
+    color: var(--ink);
+    will-change: left;
+    transition: box-shadow 0.25s ease;
+  }
+  .compare .handle:hover,
+  .compare .handle:focus-visible {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.22), 0 0 0 6px rgba(0, 113, 227, 0.18);
+    outline: none;
+  }
+  .compare .tag {
+    position: absolute;
+    top: 16px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    padding: 6px 14px;
+    border-radius: 980px;
+    pointer-events: none;
+  }
+  .compare .tag.before-tag { left: 16px; }
+  .compare .tag.after-tag { right: 16px; }
+  .compare-label {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  /* ---------- Description / What's included ---------- */
+  .split {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 72px;
+    align-items: start;
+    margin-top: 24px;
+  }
+  .placeholder-copy {
+    font-size: 1.05rem;
+    color: var(--ink-2);
+    line-height: 1.75;
+  }
+  .included { list-style: none; }
+  .included li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 1rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .included li:last-child { border-bottom: none; }
+  .included .tick {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(0, 113, 227, 0.1);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+  }
+  .included li:hover .tick { transform: scale(1.2) rotate(8deg); background: rgba(0, 113, 227, 0.18); }
+
+  /* ---------- Process strip ---------- */
+  .process {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 72px;
+    counter-reset: step;
+  }
+  .step {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  }
+  .step:hover { transform: translateY(-6px); box-shadow: 0 6px 14px rgba(0,0,0,0.05), 0 24px 48px rgba(0,0,0,0.1); }
+  .step::before {
+    counter-increment: step;
+    content: "0" counter(step);
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+  .step h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+  .step p { font-size: 0.92rem; color: var(--ink-2); }
+
+  /* ---------- CTA ---------- */
+  .cta { text-align: center; }
+  .cta .btn-primary { margin-top: 36px; padding: 16px 40px; font-size: 1.05rem; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: var(--near-white);
+    border-top: 1px solid var(--hairline);
+    padding: 44px 0;
+  }
+  .footer-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  .footer-inner a.top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    color: var(--blue);
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+  .footer-inner a.top-link:hover { opacity: 0.7; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 820px) {
+    .video-grid { grid-template-columns: 1fr; }
+    .split { grid-template-columns: 1fr; gap: 48px; }
+    .stats, .process { grid-template-columns: 1fr; }
+    section.block { padding: 90px 0; }
+    .site-nav a.nav-link { padding: 10px 8px; font-size: 0.74rem; }
+    .site-nav a.brand { font-size: 0.85rem; }
+    .back-home { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); }
+    .back-home:hover { transform: translateX(-50%) translateY(-1px); }
+    .back-home:active { transform: translateX(-50%) scale(0.98); }
+    .hero { padding-top: 120px; min-height: 80vh; }
+  }
+  @media (max-width: 480px) {
+    .site-nav .nav-inner { overflow-x: auto; justify-content: flex-start; }
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero-eyebrow, .hero p.sub, .hero-actions, .scroll-hint,
+    .hero h1 .word { animation: none; opacity: 1; transform: none; }
+    .reveal, .video-card { transition: none; opacity: 1; transform: none; }
+    .scroll-hint .chev { animation: none; }
+    .stat:hover, .step:hover, .video-card:hover .ring,
+    .included li:hover .tick, .modal-close:hover { transform: none; }
+    .modal, .modal video { transition: none; }
+    .modal video { transform: none; }
+  }
+</style>
 </head>
-<body class="theme-video-edit">
+<body>
 
-<div class="grain"></div>
+  <!-- Fixed back-to-home pill -->
+  <a class="back-home" href="../index.html" aria-label="Back to Home">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path>
+    </svg>
+    Back to Home
+  </a>
 
-<div class="loader">
-  <span class="loader-text">ZILLUR</span>
-</div>
-
-<div class="cursor-dot"></div>
-
-<a href="../index.html" class="service-home-btn">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-  Home
-</a>
-
-<div class="nav-logo">
-  <a href="../index.html">ZILLUR<span class="dot">.</span></a>
-</div>
-
-<nav class="nav">
-  <div class="nav-links">
-    <a href="../index.html#about">About</a>
-    <a href="../index.html#work">Work</a>
-    <a href="../index.html#services">Services</a>
-    <a href="../index.html#faq">FAQ</a>
-    <a href="../index.html#contact">Contact</a>
-  </div>
-  <div class="nav-social">
-    <a href="#" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-    </a>
-    <a href="#" aria-label="LinkedIn">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-    </a>
-  </div>
-</nav>
-
-<div class="nav-burger" role="button" tabindex="0" aria-label="Menu">
-  <span></span><span></span>
-</div>
-
-<div class="mobile-menu">
-  <div class="mobile-links">
-    <a href="../index.html#about">About</a>
-    <a href="../index.html#work">Work</a>
-    <a href="../index.html#services">Services</a>
-    <a href="../index.html#faq">FAQ</a>
-    <a href="../index.html#contact">Contact</a>
-  </div>
-</div>
-
-<main>
-  <section class="service-hero">
-    <p class="section-kicker">Service &middot; Video Edit</p>
-    <h1 class="service-hero-title">
-      <span class="line1">Raw footage,</span>
-      <span class="line2">REFINED</span>
-    </h1>
-    <p class="service-hero-sub">Cutting raw footage into a paced, structured story — from assembly cut to final color and sound.</p>
-  </section>
-
-  <section class="service-body">
-    <div class="service-body-inner">
-      <a href="../index.html#services" class="service-back">&larr; Back to Services</a>
-      <p>[ Describe your editing process — how you approach structure, pacing, sound design, and color, and the tools you use (Premiere Pro, DaVinci Resolve, etc.). ]</p>
-      <h3>What's included</h3>
-      <ul class="service-list">
-        <li>[ Placeholder deliverable — e.g. assembly cut & story structure ]</li>
-        <li>[ Placeholder deliverable — e.g. sound design & music sync ]</li>
-        <li>[ Placeholder deliverable — e.g. color grade & final export ]</li>
-      </ul>
-      <a href="../index.html#contact" class="btn-primary">Get in Touch</a>
+  <!-- Top nav -->
+  <nav class="site-nav" aria-label="Site">
+    <div class="nav-inner">
+      <a class="brand" href="../index.html">ZILLUR</a>
+      <a class="nav-link" href="../index.html#about">About</a>
+      <a class="nav-link" href="../index.html#work">Work</a>
+      <a class="nav-link" href="../index.html#services">Services</a>
+      <a class="nav-link" href="../index.html#faq">FAQ</a>
+      <a class="nav-link" href="../index.html#contact">Contact</a>
     </div>
-  </section>
+  </nav>
 
-  <section class="service-gallery-section">
-    <div class="service-gallery-head">
-      <h3>Recent Edits</h3>
+  <!-- Hero -->
+  <header class="hero" id="hero">
+    <div class="hero-inner" id="heroInner">
+      <span class="hero-eyebrow">Video Editing</span>
+      <h1 id="heroHeadline">Every cut, considered.</h1>
+      <p class="sub">Story-first editing that makes footage feel inevitable. Rhythm you don't notice. Pacing you can't ignore.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="../index.html#contact">Start a project</a>
+        <a class="btn btn-ghost" href="#gallery">Watch the work</a>
+      </div>
     </div>
-    <div class="service-gallery">
-      <div class="work-card">
-        <div class="work-thumb thumb-1">
-          <video class="work-video" muted loop playsinline preload="none"><source src="../assets/videos/services/video-edit-1.mp4" type="video/mp4"></video>
-          <button class="work-play-btn" aria-label="Play fullscreen"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-        </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9l6 6 6-6"></path>
+      </svg>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <section class="block alt" id="numbers">
+    <div class="container">
+      <div class="center reveal">
+        <p class="kicker">By the numbers</p>
+        <h2 class="headline">Quiet craft. Loud results.</h2>
+        <p class="lede">The edit is invisible when it works. The numbers aren't.</p>
       </div>
-      <div class="work-card">
-        <div class="work-thumb thumb-2">
-          <video class="work-video" muted loop playsinline preload="none"><source src="../assets/videos/services/video-edit-2.mp4" type="video/mp4"></video>
-          <button class="work-play-btn" aria-label="Play fullscreen"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="stats">
+        <div class="stat reveal">
+          <div class="num"><span class="bracket">[</span><span class="count" data-target="250">0</span>+<span class="bracket">]</span></div>
+          <div class="label">cuts delivered</div>
         </div>
-      </div>
-      <div class="work-card">
-        <div class="work-thumb thumb-3">
-          <video class="work-video" muted loop playsinline preload="none"><source src="../assets/videos/services/video-edit-3.mp4" type="video/mp4"></video>
-          <button class="work-play-btn" aria-label="Play fullscreen"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="stat reveal" style="transition-delay: 0.1s;">
+          <div class="num"><span class="bracket">[</span><span class="count" data-target="40">0</span>M+<span class="bracket">]</span></div>
+          <div class="label">views across projects</div>
         </div>
-      </div>
-      <div class="work-card">
-        <div class="work-thumb thumb-4">
-          <video class="work-video" muted loop playsinline preload="none"><source src="../assets/videos/services/video-edit-4.mp4" type="video/mp4"></video>
-          <button class="work-play-btn" aria-label="Play fullscreen"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="stat reveal" style="transition-delay: 0.2s;">
+          <div class="num"><span class="bracket">[</span><span class="count" data-target="7">0</span>+<span class="bracket">]</span></div>
+          <div class="label">years behind the timeline</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="service-ba-section">
-    <div class="service-ba-head">
-      <h3>Rough Cut vs. Final Cut</h3>
-    </div>
-    <div class="service-ba-grid" style="max-width: 600px;">
-      <div>
-        <div class="ba-slider">
-          <div class="ba-before" style="background-image:url('../assets/images/services/video-edit-before-1.jpg')"></div>
-          <div class="ba-after" style="background-image:url('../assets/images/services/video-edit-after-1.jpg')"></div>
-          <div class="ba-handle"><span class="ba-handle-grip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/></svg></span></div>
-          <span class="ba-label ba-label-before">Rough</span>
-          <span class="ba-label ba-label-after">Final</span>
+  <!-- Gallery -->
+  <section class="block" id="gallery">
+    <div class="container">
+      <div class="center reveal">
+        <p class="kicker">Selected work</p>
+        <h2 class="headline">Watch it move.</h2>
+        <p class="lede">Silent previews below. Click any clip for full screen, full sound.</p>
+      </div>
+      <div class="video-grid">
+        <div class="video-card" tabindex="0" role="button" aria-label="Play video 1 fullscreen" data-src="../assets/videos/services/video-edit-1.mp4">
+          <video muted loop playsinline preload="none">
+            <source src="../assets/videos/services/video-edit-1.mp4" type="video/mp4">
+          </video>
+          <div class="play-badge"><span class="ring"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1d1d1f" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>
+          <span class="caption">Edit reel — 01</span>
         </div>
-        <p class="ba-caption">[ Caption — e.g. Unedited assembly vs. graded final export ]</p>
+        <div class="video-card" tabindex="0" role="button" aria-label="Play video 2 fullscreen" data-src="../assets/videos/services/video-edit-2.mp4">
+          <video muted loop playsinline preload="none">
+            <source src="../assets/videos/services/video-edit-2.mp4" type="video/mp4">
+          </video>
+          <div class="play-badge"><span class="ring"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1d1d1f" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>
+          <span class="caption">Edit reel — 02</span>
+        </div>
+        <div class="video-card" tabindex="0" role="button" aria-label="Play video 3 fullscreen" data-src="../assets/videos/services/video-edit-3.mp4">
+          <video muted loop playsinline preload="none">
+            <source src="../assets/videos/services/video-edit-3.mp4" type="video/mp4">
+          </video>
+          <div class="play-badge"><span class="ring"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1d1d1f" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>
+          <span class="caption">Edit reel — 03</span>
+        </div>
+        <div class="video-card" tabindex="0" role="button" aria-label="Play video 4 fullscreen" data-src="../assets/videos/services/video-edit-4.mp4">
+          <video muted loop playsinline preload="none">
+            <source src="../assets/videos/services/video-edit-4.mp4" type="video/mp4">
+          </video>
+          <div class="play-badge"><span class="ring"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1d1d1f" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>
+          <span class="caption">Edit reel — 04</span>
+        </div>
       </div>
     </div>
   </section>
-</main>
 
-<footer class="footer">
-  <p>&copy; <span id="year"></span> ZILLUR</p>
-  <a href="../index.html#hero" class="back-top">Back to top</a>
-</footer>
+  <!-- Before / After -->
+  <section class="block alt" id="beforeafter">
+    <div class="container">
+      <div class="center reveal">
+        <p class="kicker">Before &amp; after</p>
+        <h2 class="headline">Same footage. Different film.</h2>
+        <p class="lede">Drag the line. Or use your arrow keys.</p>
+      </div>
+      <div class="compare-wrap">
+        <div class="reveal">
+          <div class="compare" data-compare>
+            <div class="layer before" style="background-image: url('../assets/images/services/video-edit-before-1.jpg');"></div>
+            <div class="layer after" style="background-image: url('../assets/images/services/video-edit-after-1.jpg');"></div>
+            <span class="tag before-tag">Before</span>
+            <span class="tag after-tag">After</span>
+            <div class="divider"></div>
+            <button class="handle" type="button" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+                    aria-label="Drag to compare before and after. Use arrow keys to adjust.">
+              <svg width="9" height="12" viewBox="0 0 9 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1L2 6l5 5"/></svg>
+              <svg width="9" height="12" viewBox="0 0 9 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 1l5 5-5 5"/></svg>
+            </button>
+          </div>
+          <p class="compare-label">Raw timeline vs. final cut — pacing, trims, structure</p>
+        </div>
+        <div class="reveal">
+          <div class="compare" data-compare>
+            <div class="layer before" style="background-image: url('../assets/images/services/video-edit-before-2.jpg');"></div>
+            <div class="layer after" style="background-image: url('../assets/images/services/video-edit-after-2.jpg');"></div>
+            <span class="tag before-tag">Before</span>
+            <span class="tag after-tag">After</span>
+            <div class="divider"></div>
+            <button class="handle" type="button" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+                    aria-label="Drag to compare before and after. Use arrow keys to adjust.">
+              <svg width="9" height="12" viewBox="0 0 9 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1L2 6l5 5"/></svg>
+              <svg width="9" height="12" viewBox="0 0 9 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 1l5 5-5 5"/></svg>
+            </button>
+          </div>
+          <p class="compare-label">Flat export vs. finished master — color, sound, polish</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="video-modal" id="videoModal">
-  <div class="video-modal-backdrop"></div>
-  <div class="video-modal-inner">
-    <button class="video-modal-close" id="videoModalClose" aria-label="Close video">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  <!-- About the service -->
+  <section class="block" id="about-service">
+    <div class="container">
+      <div class="reveal">
+        <p class="kicker">The service</p>
+        <h2 class="headline">Editing that serves the story.</h2>
+      </div>
+      <div class="split">
+        <p class="placeholder-copy reveal">[ Replace this paragraph with your service description. Talk about how you approach a video edit — how you find the story in the footage, build rhythm and pacing, and shape a cut that holds attention from the first frame to the last. Mention the formats you work in, typical turnaround, and what makes your editing style distinct. ]</p>
+        <div class="reveal" style="transition-delay: 0.12s;">
+          <ul class="included" aria-label="What's included">
+            <li>
+              <span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
+              [ Included item one — e.g. full narrative edit with music and sound design ]
+            </li>
+            <li>
+              <span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
+              [ Included item two — e.g. two rounds of revisions on every cut ]
+            </li>
+            <li>
+              <span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
+              [ Included item three — e.g. delivery-ready masters for every platform ]
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="block alt" id="process">
+    <div class="container">
+      <div class="center reveal">
+        <p class="kicker">Process</p>
+        <h2 class="headline">Three steps. No noise.</h2>
+      </div>
+      <div class="process">
+        <div class="step reveal">
+          <h3>Watch everything.</h3>
+          <p>Every frame gets screened. The story is already in the footage — the job is finding it.</p>
+        </div>
+        <div class="step reveal" style="transition-delay: 0.1s;">
+          <h3>Build the spine.</h3>
+          <p>Structure first, polish second. A rough cut that already breathes, then refinement pass by pass.</p>
+        </div>
+        <div class="step reveal" style="transition-delay: 0.2s;">
+          <h3>Deliver clean.</h3>
+          <p>Color-managed, loudness-checked, exported for wherever it plays. Done means done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="block cta" id="cta">
+    <div class="container reveal">
+      <p class="kicker">Ready when you are</p>
+      <h2 class="headline">Your footage deserves a better cut.</h2>
+      <p class="lede" style="margin: 0 auto;">Send the raw files. Get back a film.</p>
+      <a class="btn btn-primary" href="../index.html#contact">Get in touch</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <span>&copy; <span id="year"></span> ZILLUR — Video Editor / Motion &amp; VFX Artist</span>
+      <a class="top-link" href="#hero">
+        Back to top
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Fullscreen video modal -->
+  <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-label="Video player">
+    <button class="modal-close" id="modalClose" aria-label="Close video">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
     </button>
     <video id="modalVideo" controls playsinline></video>
   </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="../js/main.js?v=8"></script>
+<script>
+(function () {
+  'use strict';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Footer year ---------- */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- Hero headline: word-by-word rise ---------- */
+  (function splitHeadline() {
+    var h = document.getElementById('heroHeadline');
+    if (!h) return;
+    var words = h.textContent.trim().split(/\s+/);
+    h.textContent = '';
+    words.forEach(function (word, i) {
+      var span = document.createElement('span');
+      span.className = 'word';
+      span.textContent = word;
+      span.style.animationDelay = (0.18 + i * 0.12) + 's';
+      h.appendChild(span);
+      if (i < words.length - 1) h.appendChild(document.createTextNode(' '));
+    });
+  })();
+
+  /* ---------- Sticky hero: scale + fade on scroll ---------- */
+  (function heroShrink() {
+    if (reduceMotion) return;
+    var inner = document.getElementById('heroInner');
+    var hero = document.getElementById('hero');
+    if (!inner || !hero) return;
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var h = hero.offsetHeight || 1;
+      var p = Math.min(Math.max(window.scrollY / (h * 0.85), 0), 1);
+      inner.style.transform = 'translateY(' + (p * 40) + 'px) scale(' + (1 - p * 0.08) + ')';
+      inner.style.opacity = String(1 - p * 0.9);
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  /* ---------- Scroll reveal ---------- */
+  (function reveals() {
+    var els = document.querySelectorAll('.reveal');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  /* ---------- Count-up stats ---------- */
+  (function counters() {
+    var counts = document.querySelectorAll('.count');
+    if (!counts.length) return;
+    function animate(el) {
+      var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+      if (reduceMotion) { el.textContent = target; return; }
+      var start = null, dur = 1600;
+      function tick(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased);
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    if (!('IntersectionObserver' in window)) {
+      counts.forEach(function (el) { el.textContent = el.getAttribute('data-target'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+    counts.forEach(function (el) { io.observe(el); });
+  })();
+
+  /* ---------- Fullscreen video modal ---------- */
+  var modal = document.getElementById('videoModal');
+  var modalVideo = document.getElementById('modalVideo');
+  var modalClose = document.getElementById('modalClose');
+  var lastFocused = null;
+
+  function openModal(src) {
+    lastFocused = document.activeElement;
+    modalVideo.src = src;
+    modalVideo.muted = false;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var p = modalVideo.play();
+    if (p && p.catch) p.catch(function () { /* user can press play manually */ });
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    modalVideo.pause();
+    modalVideo.removeAttribute('src');
+    modalVideo.load();
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+
+  /* ---------- Video cards: lazy load/play + error fallback ---------- */
+  (function videoCards() {
+    var cards = document.querySelectorAll('.video-card');
+
+    cards.forEach(function (card) {
+      var video = card.querySelector('video');
+      if (!video) return;
+
+      function toPlaceholder() {
+        if (card.dataset.broken) return;
+        card.dataset.broken = 'true';
+        card.classList.add('placeholder', 'in');
+        card.removeAttribute('role');
+        card.removeAttribute('tabindex');
+        card.removeAttribute('aria-label');
+        card.innerHTML =
+          '<svg class="film-icon" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<rect x="2" y="4" width="20" height="16" rx="3"/><path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/></svg>' +
+          '<span>Clip coming soon</span>';
+      }
+
+      video.addEventListener('error', toPlaceholder);
+      var source = video.querySelector('source');
+      if (source) source.addEventListener('error', toPlaceholder);
+
+      function activate() {
+        if (card.dataset.broken) return;
+        openModal(card.getAttribute('data-src'));
+      }
+      card.addEventListener('click', activate);
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+      });
+    });
+
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach(function (card) {
+        var v = card.querySelector('video');
+        if (v) {
+          v.load();
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        }
+        card.classList.add('in');
+      });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var card = entry.target;
+        var video = card.querySelector('video');
+        if (entry.isIntersecting) {
+          card.classList.add('in');
+          if (video && !card.dataset.broken) {
+            if (!card.dataset.loaded) { video.load(); card.dataset.loaded = 'true'; }
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {});
+          }
+        } else if (video && card.dataset.loaded && !card.dataset.broken) {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+
+    cards.forEach(function (card) { io.observe(card); });
+  })();
+
+  /* ---------- Before / After comparison sliders ---------- */
+  (function compareSliders() {
+    document.querySelectorAll('[data-compare]').forEach(function (root) {
+      var afterLayer = root.querySelector('.layer.after');
+      var beforeLayer = root.querySelector('.layer.before');
+      var divider = root.querySelector('.divider');
+      var handle = root.querySelector('.handle');
+      var pos = 50;
+      var dragging = false;
+
+      /* Missing image -> keep themed placeholder background color */
+      [beforeLayer, afterLayer].forEach(function (layer) {
+        var match = layer.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+        var url = match && match[1];
+        if (!url) return;
+        var probe = new Image();
+        probe.onerror = function () { layer.style.backgroundImage = 'none'; };
+        probe.src = url;
+      });
+
+      function render() {
+        afterLayer.style.clipPath = 'inset(0 0 0 ' + pos + '%)';
+        divider.style.left = pos + '%';
+        handle.style.left = pos + '%';
+        handle.setAttribute('aria-valuenow', Math.round(pos));
+      }
+
+      function setFromClientX(x) {
+        var rect = root.getBoundingClientRect();
+        pos = Math.min(Math.max(((x - rect.left) / rect.width) * 100, 0), 100);
+        render();
+      }
+
+      root.addEventListener('pointerdown', function (e) {
+        if (e.button !== undefined && e.button !== 0) return;
+        dragging = true;
+        if (root.setPointerCapture) {
+          try { root.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        setFromClientX(e.clientX);
+        e.preventDefault();
+      });
+      root.addEventListener('pointermove', function (e) {
+        if (dragging) setFromClientX(e.clientX);
+      });
+      ['pointerup', 'pointercancel'].forEach(function (evt) {
+        root.addEventListener(evt, function () { dragging = false; });
+      });
+
+      handle.addEventListener('keydown', function (e) {
+        var step = e.shiftKey ? 10 : 3;
+        if (e.key === 'ArrowLeft') { pos = Math.max(pos - step, 0); render(); e.preventDefault(); }
+        else if (e.key === 'ArrowRight') { pos = Math.min(pos + step, 100); render(); e.preventDefault(); }
+        else if (e.key === 'Home') { pos = 0; render(); e.preventDefault(); }
+        else if (e.key === 'End') { pos = 100; render(); e.preventDefault(); }
+      });
+
+      render();
+    });
+  })();
+
+})();
+</script>
 </body>
 </html>
