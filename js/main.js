@@ -83,6 +83,46 @@ if (burger && mobileMenu) {
   );
 }
 
+// ---- Before/after comparison sliders (service pages) ----
+// Static markup present at parse time, so this runs immediately rather than
+// waiting on content:ready (which service pages never fire anyway).
+function initBeforeAfterSliders() {
+  document.querySelectorAll('.ba-slider').forEach((slider) => {
+    let dragging = false;
+
+    function setFromClientX(clientX) {
+      const rect = slider.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      slider.style.setProperty('--pos', pct + '%');
+    }
+
+    slider.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      slider.setPointerCapture(e.pointerId);
+      setFromClientX(e.clientX);
+    });
+    slider.addEventListener('pointermove', (e) => {
+      if (dragging) setFromClientX(e.clientX);
+    });
+    ['pointerup', 'pointercancel'].forEach((evt) =>
+      slider.addEventListener(evt, () => { dragging = false; })
+    );
+
+    slider.setAttribute('tabindex', '0');
+    slider.addEventListener('keydown', (e) => {
+      const current = parseFloat(getComputedStyle(slider).getPropertyValue('--pos')) || 50;
+      if (e.key === 'ArrowLeft') {
+        slider.style.setProperty('--pos', Math.max(0, current - 5) + '%');
+        e.preventDefault();
+      } else if (e.key === 'ArrowRight') {
+        slider.style.setProperty('--pos', Math.min(100, current + 5) + '%');
+        e.preventDefault();
+      }
+    });
+  });
+}
+initBeforeAfterSliders();
+
 // ---- Hero background video ----
 // Plays immediately (always in view on load). Falls back silently to the
 // existing gradient background if no file has been added at that path yet.
@@ -96,6 +136,51 @@ function initHeroVideo() {
   // if the browser hasn't finished resetting from the load() call yet.
   video.addEventListener('canplay', () => video.play().catch(() => {}), { once: true });
   video.load();
+}
+
+// ---- Service card background media (Services section) ----
+// Optional image/video sits behind each card's text. Videos lazy-load and
+// autoplay only while their card is in view; any media that 404s (or has
+// no path set) removes itself, leaving the plain card look untouched.
+function initServiceCardMedia() {
+  const mediaEls = document.querySelectorAll('.service-bg-media');
+  if (!mediaEls.length) return;
+
+  mediaEls.forEach((el) => {
+    el.addEventListener(
+      'error',
+      () => {
+        const card = el.closest('.service-card');
+        card?.classList.remove('has-media');
+        card?.querySelector('.service-bg-overlay')?.remove();
+        el.remove();
+      },
+      true
+    );
+  });
+
+  const videos = Array.from(document.querySelectorAll('video.service-bg-media'));
+  if (!videos.length) return;
+  videos.forEach((v) => v.addEventListener('playing', () => v.classList.add('is-ready')));
+
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const v = entry.target;
+        if (entry.isIntersecting) {
+          if (!v.dataset.loaded) {
+            v.dataset.loaded = 'true';
+            v.load();
+          }
+          v.play().catch(() => {});
+        } else {
+          v.pause();
+        }
+      });
+    },
+    { threshold: 0.25 }
+  );
+  videos.forEach((v) => obs.observe(v));
 }
 
 // ---- Showreel videos (Work section) ----
@@ -269,13 +354,22 @@ function initScrollSpy() {
   sections.forEach((section) => spy.observe(section));
 }
 
-// Work/FAQ markup is rendered by content.js — everything that targets it
-// waits for that to finish instead of running at parse time.
-document.addEventListener('content:ready', () => {
+// On index.html, Work/Services/FAQ markup is rendered by content.js, so
+// everything that targets it waits for content:ready. Service subpages don't
+// load content.js at all — their .work-thumb/.ba-slider markup is static from
+// parse time — so run the same initializers immediately there instead of
+// waiting for an event that will never fire.
+function initDynamicSections() {
   initHeroVideo();
   initWorkVideos();
+  initServiceCardMedia();
   initVideoModal();
   initFaqAccordion();
   initScrollReveals();
   initScrollSpy();
-});
+}
+if (document.querySelector('script[src*="content.js"]')) {
+  document.addEventListener('content:ready', initDynamicSections);
+} else {
+  initDynamicSections();
+}

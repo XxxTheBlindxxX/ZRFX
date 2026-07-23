@@ -42,12 +42,12 @@ const DEFAULT_CONTENT = {
     titleSerif: "What I",
     titleAccent: "OFFER",
     items: [
-      { title: "AI Video Generation", description: "Full AI-generated shots and scenes built from prompts, references, and storyboards.", slug: "ai-video-generation" },
-      { title: "AI Video Fixes", description: "Cleaning up warping, flicker, and artifacts from AI-generated footage so it holds up.", slug: "ai-video-fixes" },
-      { title: "Video Editing", description: "Cutting raw footage into a paced, structured story — from rough cut to final grade.", slug: "video-editing" },
-      { title: "Screen Comp", description: "Compositing screen inserts and replacements into live-action footage.", slug: "screen-comp" },
-      { title: "Keying", description: "Clean green/blue-screen keying for compositing talent into any background.", slug: "keying" },
-      { title: "Cleanups", description: "Removing rigs, wires, blemishes, and unwanted objects from a shot.", slug: "cleanups" }
+      { title: "AI Services", description: "AI-generated shots, scene builds, and cleanup for AI footage — from prompt to final polish.", slug: "ai-services", media: "" },
+      { title: "Video Edit", description: "Cutting raw footage into a paced, structured story — from assembly cut to final export.", slug: "video-edit", media: "" },
+      { title: "Short Edit", description: "Fast-turnaround cuts for reels, shorts, and social — tight, punchy, built to stop the scroll.", slug: "short-edit", media: "" },
+      { title: "Color Grading", description: "Mood, tone, and consistency — grading that makes footage feel intentional, not just corrected.", slug: "color-grading", media: "" },
+      { title: "Screen Replace", description: "Screen inserts, replacements, and clean keying — compositing displays and talent into any shot.", slug: "screen-replace", media: "" },
+      { title: "VFX", description: "Compositing, cleanups, and visual effects — removing what shouldn't be there, adding what should.", slug: "vfx", media: "" }
     ]
   },
   faq: {
@@ -133,20 +133,45 @@ function renderContent(content) {
     `).join('');
   }
 
-  // Services — each card links to its own static page in services/
+  // Services — each card links to its own static page in services/. An
+  // optional background image/video sits behind the text (same dimmed-
+  // overlay treatment as the hero), auto-detected by file extension, and
+  // silently omitted if no media path is set or the file fails to load.
   setText('services-kicker', c.services.kicker);
   setText('services-title-serif', c.services.titleSerif);
   setText('services-title-accent', c.services.titleAccent);
   const servicesEl = document.getElementById('servicesGrid');
   if (servicesEl) {
-    servicesEl.innerHTML = c.services.items.map((item, i) => `
-      <a href="services/${escapeHtml(item.slug)}.html" class="service-card reveal">
-        <span class="service-num">${String(i + 1).padStart(2, '0')}</span>
-        <h3 class="service-title">${escapeHtml(item.title)}</h3>
-        <p class="service-desc">${escapeHtml(item.description)}</p>
-        <span class="service-arrow" aria-hidden="true">&#8594;</span>
+    servicesEl.innerHTML = c.services.items.map((item, i) => {
+      const media = item.media || '';
+      const isVideo = /\.(mp4|webm)$/i.test(media);
+      const isImage = /\.(jpg|jpeg|png|webp|avif)$/i.test(media);
+      let bgMarkup = '';
+      if (isVideo) {
+        bgMarkup = `
+          <video class="service-bg-media" muted loop playsinline preload="none">
+            <source src="${escapeHtml(media)}" type="video/mp4">
+          </video>
+          <div class="service-bg-overlay"></div>
+        `;
+      } else if (isImage) {
+        bgMarkup = `
+          <img class="service-bg-media" src="${escapeHtml(media)}" alt="" loading="lazy">
+          <div class="service-bg-overlay"></div>
+        `;
+      }
+      return `
+      <a href="services/${escapeHtml(item.slug)}.html" class="service-card reveal${bgMarkup ? ' has-media' : ''}">
+        ${bgMarkup}
+        <div class="service-card-inner">
+          <span class="service-num">${String(i + 1).padStart(2, '0')}</span>
+          <h3 class="service-title">${escapeHtml(item.title)}</h3>
+          <p class="service-desc">${escapeHtml(item.description)}</p>
+          <span class="service-arrow" aria-hidden="true">&#8594;</span>
+        </div>
       </a>
-    `).join('');
+    `;
+    }).join('');
   }
 
   // FAQ

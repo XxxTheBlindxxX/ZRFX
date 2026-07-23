@@ -1,0 +1,11 @@
+# Real admin credentials — never commit. Copy config.example.php to
+# config.php and edit locally / directly on the server instead.
+admin/config.php
+
+# Login lockout tracking (auto-created at runtime)
+admin/data/*.json
+!admin/data/.gitkeep
+
+# OS junk
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+# Extra layer of protection — these should never be served raw even if PHP
+# execution were ever misconfigured on this directory.
+<Files "config.php">
+  Require all denied
+</Files>
+<Files "config.example.php">
+  Require all denied
+</Files>
+
+Options -Indexes

@@ -169,3 +169,65 @@ body {
   line-height: 1.6;
 }
 .admin-footer code { color: var(--accent-blue); }
+
+/* Login page */
+.admin-login-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 32px;
+}
+.admin-login-form {
+  width: 100%;
+  max-width: 360px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+}
+.admin-login-form h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  margin: 0 0 20px;
+}
+.admin-login-form .btn-primary {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-blue);
+  background: var(--accent-blue);
+  color: #0a1220;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Tabs (Content / Media) */
+.admin-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.admin-tab-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.admin-tab-btn.active { border-color: var(--accent); color: var(--text); }
+.admin-panel-hidden { display: none; }
+
+/* Media library rows */
+.media-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.media-row-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 160px; }
+.media-row-info span { font-size: 0.8rem; color: var(--text-faint); }
+.media-row-status { font-size: 0.8rem; color: var(--text-faint); }
+.media-row-status.success { color: #7de8ac; }
+.media-row-status.error { color: #ff8a8a; }
